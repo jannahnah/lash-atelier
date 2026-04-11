@@ -1,66 +1,100 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+import { useEffect } from 'react';
+import BookingForm from 'jannah/components/BookingForm';
 
 export default function Home() {
+  // Preloader Logic
+  useEffect(() => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      setTimeout(() => preloader.classList.add('hide-loader'), 2000);
+    }
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <div id="preloader">
+        <div className="loader-content">
+          <div className="logo">The Lash<span>Atelier</span></div>
+          <div className="loader-line start-line"></div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </div>
+
+      <header className="navbar">
+        <div className="logo">The Lash<span>Atelier</span></div>
+        <nav id="nav-list">
+          <a href="#home">Home</a>
+          <a href="#services">Services</a>
+          <a href="#gallery">Portfolio</a>
+          <a href="#aftercare">Care</a>
+          <a href="#booking" className="btn-gold-fill">Book Now</a>
+        </nav>
+      </header>
+
+      <main>
+        <section id="home" className="hero">
+          <div className="hero-content">
+            <span className="eyebrow">Premium Lash Artistry</span>
+            <h1>Elevate Your Natural Radiance</h1> 
+            <p>Bespoke lash extensions tailored to your unique eye shape.</p>
+            <div className="hero-btns">
+              <a href="#booking" className="btn-gold-fill">Reserve Session</a>
+              <a href="#services" className="btn-gold">View Menu</a>
+            </div>
+          </div>
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="about-artist">
+          <div className="container artist-flex">
+            <div className="artist-image">
+              <div className="image-frame">
+                <img src="/images/artist-portrait.jpg" alt="Julienne" />
+              </div>
+            </div>
+            <div className="artist-content">
+              <span className="eyebrow">The Artist</span>
+              <h2>Meet Julienne</h2>
+              <div className="gold-accent-line"></div>
+              <p>I’m Julienne, a certified lash artist with 3 years of experience...</p>
+              <a href="#booking" className="btn-gold">Consult with Me</a>
+            </div>
+          </div>
+        </section>
+
+        {/* Services Section */}
+        <section id="services" className="services">
+          <div className="container">
+            <h2 className="section-title">The Collection</h2>
+            <div className="services-grid">
+              <div className="service-card"><h3>Classic</h3><p>$75</p></div>
+              <div className="service-card featured"><h3>Hybrid</h3><p>$85</p></div>
+              <div className="service-card"><h3>Volume</h3><p>$100</p></div>
+            </div>
+          </div>
+        </section>
+
+        {/* Booking Section */}
+        <section id="booking" className="contact-section">
+          <div className="container contact-flex">
+            <div className="contact-info">
+              <h2>Book Your Experience</h2>
+              <p>Ready for a transformation?</p>
+            </div>
+            <div className="contact-form-container">
+              {/* WE WILL PUT THE BOOKING COMPONENT HERE */}
+              <BookingForm />
+            </div>
+          </div>
+        </section>
       </main>
-    </div>
+
+      <footer className="luxury-footer">
+        <div className="footer-content">
+          <div className="logo">The Lash<span>Atelier</span></div>
+          <p>© 2026 The Lash Atelier. Designed for Luxury</p>
+        </div>
+      </footer>
+    </>
   );
 }
