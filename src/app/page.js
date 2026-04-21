@@ -57,7 +57,7 @@ export default function Home() {
               <span className="eyebrow">The Artist</span>
               <h2>Meet Julienne</h2>
               <div className="gold-accent-line"></div>
-              <p>I’m Julienne, a certified lash artist with 3 years of experience...</p>
+              <p>I’m Julienne, a certified lash artist dedicated to enhancing your natural beauty through custom lash extensions, with 3 years of experience. Every set is thoughtfully designed based on your eye shape, features, and lifestyle—because no two clients are the same.</p>
               <a href="#booking" className="btn-gold">Consult with Me</a>
             </div>
           </div>
@@ -91,7 +91,7 @@ export default function Home() {
       </main>
 
       <FAQ />
-      
+
       <footer className="luxury-footer">
         <div className="footer-content">
           <div className="logo">The Lash<span>Atelier</span></div>
