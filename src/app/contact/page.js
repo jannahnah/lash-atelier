@@ -1,11 +1,7 @@
 'use client';
 import { useState } from 'react';
+import FAQ from '@/components/FAQ';
 
-const faqData = [
-  { q: "How should I prepare for my appointment?", a: "Arrive with clean lashes and no eye makeup. Avoid caffeine before your session to keep your eyes calm." },
-  { q: "How long does a full set take?", a: "A full set typically takes 2 to 2.5 hours depending on the chosen style and your natural lash density." },
-  { q: "What is your cancellation policy?", a: "We require 24 hours notice for cancellations. Deposits are non-refundable for late cancellations." }
-];
 
 export default function ContactPage() {
   const [openIndex, setOpenIndex] = useState(null);

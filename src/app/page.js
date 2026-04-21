@@ -1,6 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import BookingForm from 'jannah/components/BookingForm';
+import FAQ from '@/components/FAQ';
 
 export default function Home() {
   // Preloader Logic
