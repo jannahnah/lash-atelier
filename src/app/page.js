@@ -1,7 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import BookingForm from 'jannah/components/BookingForm';
-import FAQ from '@/components/FAQ';
+import FAQ from 'jannah/components/FAQ';
 
 export default function Home() {
   // Preloader Logic
@@ -90,6 +90,8 @@ export default function Home() {
         </section>
       </main>
 
+      <FAQ />
+      
       <footer className="luxury-footer">
         <div className="footer-content">
           <div className="logo">The Lash<span>Atelier</span></div>

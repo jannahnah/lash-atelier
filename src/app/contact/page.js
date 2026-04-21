@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import FAQ from '@/components/FAQ';
+import FAQ from 'jannah/components/FAQ';
 
 
 export default function ContactPage() {
