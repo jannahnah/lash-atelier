@@ -11,21 +11,26 @@ export default function BookingForm() {
 
   const availableTimes = ["09:00 AM", "11:00 AM", "01:00 PM", "03:00 PM", "05:00 PM"];
 
-  useEffect(() => {
+    useEffect(() => {
     if (selectedDate) {
       const fetchAvailability = async () => {
         const { data } = await supabase
           .from('appointments')
           .select('appointment_time')
-          .eq('appointment_date', selectedDate);
+          .eq('appointment_date', selectedDate)
+          .eq('status', 'confirmed'); // This ensures only locked slots are blocked
         
-        if (data) setBookedSlots(data.map(row => row.appointment_time));
+        if (data) {
+          setBookedSlots(data.map(row => row.appointment_time));
+        } else {
+          setBookedSlots([]);
+        }
       };
       fetchAvailability();
     }
-  }, [selectedDate]);
+  }, [selectedDate])
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
@@ -36,7 +41,8 @@ export default function BookingForm() {
       service_type: formData.get('service'),
       appointment_date: selectedDate,
       appointment_time: formData.get('time'),
-      notes: formData.get('goals')
+      notes: formData.get('goals'),
+      status: 'pending' // Set this explicitly
     }]);
 
     if (!error) {
