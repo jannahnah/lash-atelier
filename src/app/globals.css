@@ -643,7 +643,6 @@ nav a, .hero-btns a {
   text-align: center;
   font-size: 1.1rem;
 }
-
 /* Responsive Styles for Mobile and Tablets */
 @media (max-width: 768px) {
   /* Navbar Adjustments */
