@@ -662,8 +662,16 @@ nav a, .hero-btns a {
   opacity: 1;
 }
 
+
 /* Responsive Styles for Mobile and Tablets */
 @media (max-width: 768px) {
+
+  canvas {
+    display: none !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+
 /* 1. Force the Navbar to a single line */
   .navbar {
     display: flex !important;

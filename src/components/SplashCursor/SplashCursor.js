@@ -845,11 +845,26 @@ function SplashCursor({
     }
 
     function updatePointerDownData(pointer, id, posX, posY) {
+      const rect = canvas.getBoundingClientRect();
+      
+      // 1. Capture the exact scale of the canvas
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      // 2. Apply the offset
+      // We subtract rect.left/top to get the local canvas position, 
+      // then multiply by the scale to fix the 'top-left' drift.
+      const adjustedX = (posX - rect.left) * scaleX;
+      const adjustedY = (posY - rect.top) * scaleY;
+
       pointer.id = id;
       pointer.down = true;
       pointer.moved = false;
-      pointer.texcoordX = posX / canvas.width;
-      pointer.texcoordY = 1.0 - posY / canvas.height;
+
+      // 3. Convert to texture coordinates (0.0 to 1.0)
+      pointer.texcoordX = adjustedX / canvas.width;
+      pointer.texcoordY = 1.0 - (adjustedY / canvas.height);
+
       pointer.prevTexcoordX = pointer.texcoordX;
       pointer.prevTexcoordY = pointer.texcoordY;
       pointer.deltaX = 0;
@@ -994,8 +1009,21 @@ function wrap(value, min, max) {
       updatePointerMoveData(pointer, e.clientX, e.clientY, pointer.color);
     };
 
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousedown', e => {
+        if (isMobile()) return; // Stop the code here if it's a mobile screen
+        updatePointerDownData(pointers[0], -1, e.clientX, e.clientY);
+    });
+
+    window.addEventListener('mousemove', e => {
+        if (isMobile()) return; 
+        updatePointerMoveData(pointers[0], e.clientX, e.clientY);
+    });
+
+    window.addEventListener('touchstart', e => {
+        if (isMobile()) return; // Disable the splash effect for touches
+        // If you want to keep the effect for touch but fix the offset later, 
+        // you'd keep this, but for now, this will disable it.
+    });
 
     // Cleanup logic
     return () => {
