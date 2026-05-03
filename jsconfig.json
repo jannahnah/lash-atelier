@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       "jannah/*": ["./src/*"]
     }
-  }
+  },
+  "exclude": ["node_modules"]
 }

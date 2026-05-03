@@ -132,7 +132,7 @@ export default function BookingForm() {
             <div className="modal-icon">✨</div>
             <h2>Appointment Requested</h2>
             <div className="gold-accent-line" style={{ margin: "15px auto" }}></div>
-            <p>Thank you, gorgeous! Julienne will review your request and contact you within 24 hours.</p>
+            <p>Thank you, Gorgeous! Julienne will review your request and contact you within 24 hours.</p>
             <button onClick={() => setShowModal(false)} className="btn-gold">Back to Site</button>
           </div>
         </div>
