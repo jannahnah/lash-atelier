@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from 'jannah/lib/supabase';
 import { useRouter } from 'next/navigation';
 
+
 export default function AdminDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');

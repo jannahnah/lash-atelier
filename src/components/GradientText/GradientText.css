@@ -1,0 +1,63 @@
+.animated-gradient-text {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  max-width: fit-content;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.25rem;
+  /* Font weight and style inherited from parent, but smoothed for gradients */
+  transition: box-shadow 0.5s ease-out;
+  overflow: visible; /* Changed to visible so serif letters aren't clipped */
+  cursor: pointer;
+}
+
+/* We remove the background and blur here so it sits cleanly on your hero image */
+.animated-gradient-text:not(.with-border) {
+  backdrop-filter: none;
+  background-color: transparent;
+}
+
+.animated-gradient-text.with-border {
+  padding: 0.35rem 0.75rem;
+  backdrop-filter: blur(10px);
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Border styling - matches your luxury gold theme */
+.gradient-overlay::before {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* Changed background to match your site's light aesthetic or transparency */
+  background-color: transparent; 
+  z-index: -1;
+}
+
+.text-content {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  /* Optimization for smooth animation */
+  -webkit-text-fill-color: transparent;
+  will-change: background-position;
+}

@@ -643,6 +643,25 @@ nav a, .hero-btns a {
   text-align: center;
   font-size: 1.1rem;
 }
+
+.portfolio-item:hover img {
+  transform: scale(1.05);
+}
+
+.portfolio-item {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.portfolio-overlay {
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.portfolio-item:hover .portfolio-overlay {
+  opacity: 1;
+}
+
 /* Responsive Styles for Mobile and Tablets */
 @media (max-width: 768px) {
   /* Navbar Adjustments */
