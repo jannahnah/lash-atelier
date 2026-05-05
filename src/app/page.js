@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link'; 
 import FAQ from 'jannah/components/FAQ';
 import GradientText from '../components/GradientText/GradientText';
@@ -110,31 +110,30 @@ export default function Home() {
             </div>
           </div>
         </section>
-        
-        <section id="gallery" className="section" style={{ padding: '80px 20px', backgroundColor: '#fff' }}>
+
+       <section id="gallery" className="section" style={{ padding: '80px 0', backgroundColor: '#fff', overflow: 'hidden' }}>
           <div className="container">
             <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '50px' }}>The Portfolio</h2>
             
-            <div className="portfolio-grid" style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-              gap: '30px' 
-            }}>
-              {portfolioItems.map((item) => (
-                <div key={item.id} className="portfolio-card-wrapper">
-                  <div className="image-frame-portfolio">
-                    <img 
-                      src={item.img} 
-                      alt={item.title} 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                    <div className="image-overlay">
-                      <span className="overlay-type">{item.type}</span>
-                      <h3 className="overlay-title">{item.title}</h3>
+            <div className="carousel-container">
+              <div className="carousel-track">
+                {/* We map the items twice to create an infinite loop feel */}
+                {[...portfolioItems, ...portfolioItems].map((item, index) => (
+                  <div key={`${item.id}-${index}`} className="portfolio-card-wrapper">
+                    <div className="image-frame-portfolio">
+                      <img 
+                        src={item.img} 
+                        alt={item.title} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                      <div className="image-overlay">
+                        <span className="overlay-type">{item.type}</span>
+                        <h3 className="overlay-title">{item.title}</h3>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -143,11 +142,38 @@ export default function Home() {
       <FAQ />
       
       {/* STYLES */}
-      <style jsx>{`
-        .btn-gold:hover {
-          background-color: #D4AF37;
-          color: #fff !important;
+<style jsx>{`
+        /* CAROUSEL LOGIC */
+        .carousel-container {
+          width: 100%;
+          overflow: hidden;
+          padding: 20px 0;
+          position: relative;
         }
+
+        .carousel-track {
+          display: flex;
+          gap: 30px;
+          width: max-content;
+          animation: scroll 40s linear infinite; /* Adjust time for speed */
+        }
+
+        /* PAUSE ON HOVER */
+        .carousel-container:hover .carousel-track {
+          animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-50% - 15px)); } /* Half the track width */
+        }
+
+        /* CARD DESIGN INTACT */
+        .portfolio-card-wrapper {
+          width: 350px; /* Fixed width for carousel consistency */
+          flex-shrink: 0;
+        }
+
         .image-frame-portfolio {
           position: relative;
           overflow: hidden;
@@ -156,10 +182,7 @@ export default function Home() {
           transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
           box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-        .portfolio-card-wrapper:hover .image-frame-portfolio {
-          border-radius: 20px;
-          transform: translateY(-10px);
-        }
+
         .image-overlay {
           position: absolute;
           bottom: 0;
@@ -173,12 +196,24 @@ export default function Home() {
           opacity: 0;
           transition: opacity 0.4s ease;
         }
+
         .portfolio-card-wrapper:hover .image-overlay {
           opacity: 1;
         }
-        @media (max-width: 768px) {
-          .artist-flex { flex-direction: column; text-align: center; }
-          .gold-accent-line { margin: 0 auto 25px auto; }
+
+        /* WHITE FONT UPDATES */
+        .overlay-type {
+          color: rgba(255, 255, 255, 0.8);
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          letter-spacing: 1px;
+        }
+
+        .overlay-title {
+          color: #ffffff; /* Explicitly White */
+          font-family: 'Georgia', serif;
+          margin-top: 5px;
+          font-size: 1.5rem;
         }
       `}</style>
 
