@@ -845,26 +845,11 @@ function SplashCursor({
     }
 
     function updatePointerDownData(pointer, id, posX, posY) {
-      const rect = canvas.getBoundingClientRect();
-      
-      // 1. Capture the exact scale of the canvas
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-
-      // 2. Apply the offset
-      // We subtract rect.left/top to get the local canvas position, 
-      // then multiply by the scale to fix the 'top-left' drift.
-      const adjustedX = (posX - rect.left) * scaleX;
-      const adjustedY = (posY - rect.top) * scaleY;
-
       pointer.id = id;
       pointer.down = true;
       pointer.moved = false;
-
-      // 3. Convert to texture coordinates (0.0 to 1.0)
-      pointer.texcoordX = adjustedX / canvas.width;
-      pointer.texcoordY = 1.0 - (adjustedY / canvas.height);
-
+      pointer.texcoordX = posX / canvas.width;
+      pointer.texcoordY = 1.0 - posY / canvas.height;
       pointer.prevTexcoordX = pointer.texcoordX;
       pointer.prevTexcoordY = pointer.texcoordY;
       pointer.deltaX = 0;
@@ -962,7 +947,8 @@ function SplashCursor({
       }
       return { r, g, b };
     }
-function wrap(value, min, max) {
+
+    function wrap(value, min, max) {
       const range = max - min;
       if (range === 0) return min;
       return ((value - min) % range) + min;
@@ -971,10 +957,8 @@ function wrap(value, min, max) {
     function getResolution(resolution) {
       let aspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight;
       if (aspectRatio < 1) aspectRatio = 1.0 / aspectRatio;
-
-      let min = Math.round(resolution);
-      let max = Math.round(resolution * aspectRatio);
-
+      const min = Math.round(resolution);
+      const max = Math.round(resolution * aspectRatio);
       if (gl.drawingBufferWidth > gl.drawingBufferHeight) return { width: max, height: min };
       else return { width: min, height: max };
     }
@@ -994,59 +978,108 @@ function wrap(value, min, max) {
       return hash;
     }
 
-    // Initialize and Start Animation
+    // Named event handlers for proper cleanup
+    function handleMouseDown(e) {
+      let pointer = pointers[0];
+      let posX = scaleByPixelRatio(e.clientX);
+      let posY = scaleByPixelRatio(e.clientY);
+      updatePointerDownData(pointer, -1, posX, posY);
+      clickSplat(pointer);
+    }
+
+    let firstMouseMoveHandled = false;
+    function handleMouseMove(e) {
+      let pointer = pointers[0];
+      let posX = scaleByPixelRatio(e.clientX);
+      let posY = scaleByPixelRatio(e.clientY);
+      if (!firstMouseMoveHandled) {
+        let color = generateColor();
+        updatePointerMoveData(pointer, posX, posY, color);
+        firstMouseMoveHandled = true;
+      } else {
+        updatePointerMoveData(pointer, posX, posY, pointer.color);
+      }
+    }
+
+    function handleTouchStart(e) {
+      const touches = e.targetTouches;
+      let pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        let posX = scaleByPixelRatio(touches[i].clientX);
+        let posY = scaleByPixelRatio(touches[i].clientY);
+        updatePointerDownData(pointer, touches[i].identifier, posX, posY);
+      }
+    }
+
+    function handleTouchMove(e) {
+      const touches = e.targetTouches;
+      let pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        let posX = scaleByPixelRatio(touches[i].clientX);
+        let posY = scaleByPixelRatio(touches[i].clientY);
+        updatePointerMoveData(pointer, posX, posY, pointer.color);
+      }
+    }
+
+    function handleTouchEnd(e) {
+      const touches = e.changedTouches;
+      let pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        updatePointerUpData(pointer);
+      }
+    }
+
+    // Add event listeners
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove, false);
+    window.addEventListener('touchend', handleTouchEnd);
+
     updateFrame();
 
-    // Event Listeners for Interaction
-    const handleMouseDown = (e) => {
-      let pointer = pointers[0];
-      updatePointerDownData(pointer, -1, e.clientX, e.clientY);
-      clickSplat(pointer);
-    };
-
-    const handleMouseMove = (e) => {
-      let pointer = pointers[0];
-      updatePointerMoveData(pointer, e.clientX, e.clientY, pointer.color);
-    };
-
-    window.addEventListener('mousedown', e => {
-        if (isMobile()) return; // Stop the code here if it's a mobile screen
-        updatePointerDownData(pointers[0], -1, e.clientX, e.clientY);
-    });
-
-    window.addEventListener('mousemove', e => {
-        if (isMobile()) return; 
-        updatePointerMoveData(pointers[0], e.clientX, e.clientY);
-    });
-
-    window.addEventListener('touchstart', e => {
-        if (isMobile()) return; // Disable the splash effect for touches
-        // If you want to keep the effect for touch but fix the offset later, 
-        // you'd keep this, but for now, this will disable it.
-    });
-
-    // Cleanup logic
+    // Cleanup function
     return () => {
       isActive = false;
-      if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
+
+      // Cancel animation frame
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+        animationFrameId.current = null;
+      }
+
+      // Remove event listeners
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [COLOR, RAINBOW_MODE, CURL, SPLAT_RADIUS]); // This line will now work
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '100vw',
-        height: '100vh',
+        zIndex: 50,
         pointerEvents: 'none',
-        zIndex: 50
+        width: '100%',
+        height: '100%'
       }}
-    />
+    >
+      <canvas
+        ref={canvasRef}
+        id="fluid"
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'block'
+        }}
+      />
+    </div>
   );
 }
 
