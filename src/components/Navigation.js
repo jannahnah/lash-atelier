@@ -22,8 +22,8 @@ export default function Navigation() {
 
       <nav className={`nav-links ${isOpen ? 'active' : ''}`}>
         <Link href="/" onClick={() => setIsOpen(false)}>Home</Link>
-        <Link href="/" onClick={() => setIsOpen(false)}>Services</Link>
-        <Link href="/" onClick={() => setIsOpen(false)}>Portfolio</Link>
+        <Link href="/#services" onClick={() => setIsOpen(false)}>Services</Link>
+        <Link href="/#gallery" onClick={() => setIsOpen(false)}>Portfolio</Link>
         <Link href="/contact" onClick={() => setIsOpen(false)}>Contact Me</Link>
         <Link href="/book" onClick={() => setIsOpen(false)}>Book Now</Link>
       </nav>

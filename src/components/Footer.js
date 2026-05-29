@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-          <footer className="luxury-footer" style={{ padding: '30px 20px', background: '#fff', borderTop: '1px solid #f0f0f0' }}>
+      <footer className="luxury-footer" style={{ padding: '30px 20px', background: '#fff', borderTop: '1px solid #f0f0f0' }}>
         <div className="footer-content" style={{ textAlign: 'center' }}>
           <div className="logo" style={{ marginBottom: '10px', fontSize: '1.2rem' }}>
             The Lash<span>Atelier</span>

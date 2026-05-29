@@ -37,7 +37,6 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const checkUser = async () => {
-      // 1. Get the current session immediately from local storage/Supabase
       const { data: { session } } = await supabase.auth.getSession();
 
       if (session?.user) {
@@ -46,21 +45,20 @@ export default function AdminDashboard() {
 
         if (allowed.includes(userEmail)) {
           setIsAuthenticated(true);
-          await fetchAppointments(); // Only fetch if they are authorized
+          await fetchAppointments();
         } else {
           await supabase.auth.signOut();
           router.replace('/login');
         }
       } else {
-        // No session found, send to login
         router.replace('/login');
       }
-      setLoading(false); // Stop the pulse once we have an answer
+      setLoading(false);
     };
 
     checkUser();
 
-    // 2. Keep the listener for active sign-outs/token refreshes
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
         setIsAuthenticated(false);
